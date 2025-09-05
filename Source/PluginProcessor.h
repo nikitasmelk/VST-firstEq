@@ -132,8 +132,13 @@ private:
                 update<0>(chain, cutCoefficients);
             }
                 
+        }
     }
-    }
+    
+    void updateLowCutFilters(const ChainSettings& chainSettings);
+    void updateHighCutFilters(const ChainSettings& chainSettings);
+    
+    void updateFilters();
     
     
     //==============================================================================
