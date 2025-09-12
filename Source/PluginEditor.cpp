@@ -9,6 +9,13 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+inline float getTextWidth (const juce::Font& font, const juce::String& text)
+{
+    juce::GlyphArrangement ga;
+    ga.addLineOfText (font, text, 0.0f, 0.0f);
+    return ga.getBoundingBox (0, text.length(), true).getWidth();
+}
+
 void LookAndFeel::drawRotarySlider(juce::Graphics & g, int x, int y, int width, int height, float sliderPosProportional, float rotaryStartAngle, float rotaryEndAngle, juce::Slider & slider)
 {
     using namespace juce;
@@ -76,10 +83,11 @@ void RotarySliderWithLabels::paint(juce::Graphics &g)
     
     auto sliderBounds = getSliderBounds();
     
-    g.setColour(Colours::red);
-    g.drawRect(getLocalBounds());
-    g.setColour(Colours::yellow);
-    g.drawRect(sliderBounds);
+    // SOME BOUNDS
+//    g.setColour(Colours::red);
+//    g.drawRect(getLocalBounds());
+//    g.setColour(Colours::yellow);
+//    g.drawRect(sliderBounds);
     
     
     
@@ -103,6 +111,32 @@ void RotarySliderWithLabels::paint(juce::Graphics &g)
                                       startAng,
                                       endAng,
                                       *this);
+    
+    auto center = sliderBounds.toFloat().getCentre();
+    auto radius = sliderBounds.getWidth() * 0.5f;
+    
+    g.setColour(Colour(0u, 172u, 1u));
+    g.setFont(getTextHeight());
+    
+    auto numChoices = labels.size();
+    for( int i = 0; i < numChoices; ++i)
+    {
+        auto pos = labels[i].pos;
+        jassert(0.f <= pos);
+        jassert(pos <= 1.f);
+        
+        auto ang = jmap(pos, 0.f, 1.f, startAng, endAng);
+        
+        auto c = center.getPointOnCircumference(radius + getTextHeight() * 0.5f + 1, ang);
+        
+        Rectangle<float> r;
+        auto str = labels[i].label;
+        r.setSize(getTextWidth(g.getCurrentFont(), str), getTextHeight());
+        r.setCentre(c);
+        r.setY(r.getY() + getTextHeight());
+        
+        g.drawFittedText(str, r.toNearestInt(), juce::Justification::centred, 1);
+    }
 }
 
 juce::Rectangle<int> RotarySliderWithLabels::getSliderBounds() const
@@ -123,7 +157,39 @@ juce::Rectangle<int> RotarySliderWithLabels::getSliderBounds() const
 
 juce::String RotarySliderWithLabels::getDisplayString() const
 {
-    return juce::String(getValue());
+    if( auto* choiceParam = dynamic_cast<juce::AudioParameterChoice*>(param) )
+        return choiceParam->getCurrentChoiceName();
+    
+    juce::String str;
+    bool addK = false;
+    
+    if( auto* floatParam = dynamic_cast<juce::AudioParameterFloat*>(param))
+    {
+        float val = getValue();
+        
+        if( val > 999.f)
+        {
+            val /= 1000.f;
+            addK = true;
+        }
+        
+        str = juce::String(val, (addK ? 2 : 0));
+    }
+    else
+    {
+        jassertfalse;
+    }
+    
+    if( suffix.isNotEmpty())
+    {
+        str << " ";
+        if (addK)
+            str << "k";
+        
+        str << suffix;
+    }
+    
+    return str;
 }
 //==============================================================================
 ResponseCurveComponent::ResponseCurveComponent(SimpleEQAudioProcessor& p) : audioProcessor(p)
@@ -267,6 +333,9 @@ highCutSlopeSliderAttachment(audioProcessor.apvts, "HighCut Slope", highCutSlope
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
+    
+    peakFreqSlider.labels.add({0.f, "20Hz"});
+    peakFreqSlider.labels.add({1.f, "20kHz"});
     
     for (auto* comp : getComps() )
     {

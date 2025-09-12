@@ -37,6 +37,14 @@ struct RotarySliderWithLabels : juce::Slider
         setLookAndFeel(nullptr);
     }
     
+    struct LabelPos
+    {
+        float pos;
+        juce::String label;
+    };
+    
+    juce::Array<LabelPos> labels;
+    
     void paint(juce::Graphics& g) override;
     juce::Rectangle<int> getSliderBounds() const;
     int getTextHeight() const { return 14; }
@@ -46,6 +54,13 @@ private:
     
     juce::RangedAudioParameter* param;
     juce::String suffix;
+    
+    static float measureTextWidth (const juce::Font& font, const juce::String& text)
+    {
+        juce::GlyphArrangement ga;
+        ga.addLineOfText (font, text, 0.0f, 0.0f);
+        return ga.getBoundingBox (0, text.length(), true).getWidth();
+    }
 };
 
 struct ResponseCurveComponent: juce::Component,
