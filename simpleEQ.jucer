@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="ubg2yV" name="simpleEQ" projectType="audioplug" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1">
-  <MAINGROUP id="TR1Fv3" name="simpleEQ">
+<JUCERPROJECT id="ubg2yV" name="VmesteBasedEQ" projectType="audioplug" useAppConfig="0"
+              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" pluginChannelConfigs="{2,2}"
+              pluginName="VmesteBasedEQ" pluginDesc="VmesteBasedEQ" pluginManufacturer="nikitasmelkov"
+              pluginCode="VBEQ" pluginVST3Category="EQ,Fx" bundleIdentifier="com.vmeste.vmestebasedeq"
+              companyWebsite="www.vmestetogether.com" pluginManufacturerCode="VMAP">
+  <MAINGROUP id="TR1Fv3" name="VmesteBasedEQ">
     <GROUP id="{CAFC9E1F-99FA-45E3-9EF3-CECA3F441FCF}" name="Source">
       <FILE id="VfSd9J" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
