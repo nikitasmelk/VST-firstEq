@@ -766,7 +766,7 @@ analyzerEnabledButtonAttachment(audioProcessor.apvts, "Analyzer Enabled", analyz
         }
     };
     
-    setSize (660, 600);
+    setSize (600, 600);
 }
 
 SimpleEQAudioProcessorEditor::~SimpleEQAudioProcessorEditor()
@@ -791,11 +791,16 @@ void SimpleEQAudioProcessorEditor::paint(juce::Graphics &g)
      auto bounds = getLocalBounds();
      auto center = bounds.getCentre();
      
-     g.setFont(Font("Iosevka Term Slab", 30, 0)); //https://github.com/be5invis/Iosevka
-     
-     String title { "VMESTE Epique EQ" };
-     g.setFont(30);
-     auto titleWidth = g.getCurrentFont().getStringWidth(title);
+    auto opts = juce::FontOptions()
+                  .withName("Herculanum")
+                  .withStyle("Regular")
+                  .withPointHeight(30.0f)
+                  .withFallbacks({ juce::Font::getDefaultSansSerifFontName() });
+    
+    g.setFont(juce::Font{ opts });
+
+    juce::String title { "VMESTE Epique EQ" };
+    auto titleWidth = getTextWidth(g.getCurrentFont(), title);
      
      curve.startNewSubPath(center.x, 32);
      curve.lineTo(center.x - titleWidth * 0.45f, 32);
