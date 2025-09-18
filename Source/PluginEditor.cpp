@@ -24,10 +24,11 @@ void LookAndFeel::drawRotarySlider(juce::Graphics & g, int x, int y, int width, 
     
     auto enabled = slider.isEnabled();
     
-    g.setColour(enabled ? Colour(97u, 18u, 167u) : Colours::darkgrey);
+    // Use color palette for slider fill and outline
+    g.setColour(enabled ? ColorPalette::sliderFill : ColorPalette::buttonInactive);
     g.fillEllipse(bounds);
     
-    g.setColour(enabled ? Colour(255u, 154u, 1u) : Colours::grey);
+    g.setColour(enabled ? ColorPalette::sliderOutline : ColorPalette::textSecondary);
     g.drawEllipse(bounds, 1.f);
     
     if( auto* rswl = dynamic_cast<RotarySliderWithLabels*>(&slider))
@@ -64,10 +65,10 @@ void LookAndFeel::drawRotarySlider(juce::Graphics & g, int x, int y, int width, 
         r.setSize(strWidth + 4.0f, rswl->getTextHeight() + 2.0f);
         r.setCentre(bounds.getCentre());
         
-        g.setColour(enabled ? Colours::black : Colours::darkgrey);
+        g.setColour(enabled ? ColorPalette::background : ColorPalette::buttonInactive);
         g.fillRect(r);
         
-        g.setColour(enabled ? Colours::white : Colours::lightgrey);
+        g.setColour(enabled ? ColorPalette::textPrimary : ColorPalette::textSecondary);
         g.drawFittedText(text, r.toNearestInt(), juce::Justification::centred, 1);
     }
 
@@ -111,7 +112,7 @@ void LookAndFeel::drawToggleButton(juce::Graphics &g,
         
         PathStrokeType pst(2.f, PathStrokeType::JointStyle::curved);
         
-        auto color = toggleButton.getToggleState() ? Colours::dimgrey : Colour(0u, 172u, 1u);
+        auto color = toggleButton.getToggleState() ? ColorPalette::buttonInactive : ColorPalette::buttonActive;
         
         g.setColour(color);
         g.strokePath(powerButton, pst);
@@ -119,7 +120,7 @@ void LookAndFeel::drawToggleButton(juce::Graphics &g,
     }
     else if( auto* analyzerButton = dynamic_cast<AnalyzerButton*>(&toggleButton))
     {
-        auto color = ! toggleButton.getToggleState() ? Colours::dimgrey : Colour(0u, 172u, 1u);
+        auto color = ! toggleButton.getToggleState() ? ColorPalette::buttonInactive : ColorPalette::buttonActive;
         
         g.setColour(color);
         
@@ -178,7 +179,8 @@ void RotarySliderWithLabels::paint(juce::Graphics &g)
     auto center = sliderBounds.toFloat().getCentre();
     auto radius = sliderBounds.getWidth() * 0.5f;
     
-    g.setColour(Colour(0u, 172u, 1u));
+    // Use color palette for slider labels
+    g.setColour(ColorPalette::highlightActive);
     g.setFont(getTextHeight());
     
     auto numChoices = labels.size();
@@ -353,8 +355,8 @@ void ResponseCurveComponent::updateResponseCurve()
 void ResponseCurveComponent::paint (juce::Graphics& g)
 {
     using namespace juce;
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (Colours::black);
+    // Fill background with the main background color
+    g.fillAll (ColorPalette::background);
 
     drawBackgroundGrid(g);
     
@@ -365,17 +367,19 @@ void ResponseCurveComponent::paint (juce::Graphics& g)
         auto leftChannelFFTPath = leftPathProducer.getPath();
         leftChannelFFTPath.applyTransform(AffineTransform().translation(responseArea.getX(), responseArea.getY()));
         
-        g.setColour(Colours::pink);
+        // Use color palette for analyzer curves
+        g.setColour(ColorPalette::curveAnalyzer1);
         g.strokePath(leftChannelFFTPath, PathStrokeType(1.f));
         
         auto rightChannelFFTPath = rightPathProducer.getPath();
         rightChannelFFTPath.applyTransform(AffineTransform().translation(responseArea.getX(), responseArea.getY()));
         
-        g.setColour(Colours::limegreen);
+        g.setColour(ColorPalette::curveAnalyzer2);
         g.strokePath(rightChannelFFTPath, PathStrokeType(1.f));
     }
     
-    g.setColour(Colours::white);
+    // Use color palette for main response curve
+    g.setColour(ColorPalette::curveResponse);
     g.strokePath(responseCurve, PathStrokeType(2.f));
     
     Path border;
@@ -385,13 +389,14 @@ void ResponseCurveComponent::paint (juce::Graphics& g)
     border.addRoundedRectangle(getRenderArea(), 4);
     border.addRectangle(getLocalBounds());
     
-    g.setColour(Colours::black);
+    g.setColour(ColorPalette::background);
     
     g.fillPath(border);
     
     drawTextLabels(g);
     
-    g.setColour(Colours::orange);
+    // Use color palette for border
+    g.setColour(ColorPalette::border);
     g.drawRoundedRectangle(getRenderArea().toFloat(), 4.f, 1.f);
     
 }
@@ -443,7 +448,8 @@ void ResponseCurveComponent::drawBackgroundGrid(juce::Graphics &g)
     
     auto xs = getXs(freqs, left, width);
     
-    g.setColour(Colours::dimgrey);
+    // Use color palette for grid lines
+    g.setColour(ColorPalette::textSecondary);
 
     for( auto x : xs)
     {
@@ -456,7 +462,8 @@ void ResponseCurveComponent::drawBackgroundGrid(juce::Graphics &g)
     for( auto gDb : gain)
     {
         auto y = jmap(gDb, -24.f, 24.f, float(bottom), float(top));
-        g.setColour(gDb == 0.f ? Colour(0u, 172u, 1u) : Colours::darkgrey);
+        // Highlight zero line with active color, others with secondary
+        g.setColour(gDb == 0.f ? ColorPalette::highlightActive : ColorPalette::textSecondary);
         g.drawHorizontalLine(y, left, right);
     }
     
@@ -466,7 +473,8 @@ void ResponseCurveComponent::drawTextLabels(juce::Graphics &g)
 {
     using namespace juce;
 
-    g.setColour(Colours::lightgrey);
+    // Use color palette for text labels
+    g.setColour(ColorPalette::textSecondary);
     const int fontHeight = 10;
     g.setFont(fontHeight);
     
@@ -528,7 +536,7 @@ void ResponseCurveComponent::drawTextLabels(juce::Graphics &g)
         r.setX(getWidth() - textWidth);
         r.setCentre(r.getCentreX(), y);
         
-        g.setColour(gDb == 0.f ? Colour(0u, 172u, 1u) : Colours::lightgrey);
+        g.setColour(gDb == 0.f ? ColorPalette::highlightActive : ColorPalette::textSecondary);
         
         g.drawFittedText(str, r, juce::Justification::centredLeft, 1);
         
@@ -538,7 +546,7 @@ void ResponseCurveComponent::drawTextLabels(juce::Graphics &g)
         r.setX(1);
         textWidth = getTextWidth(g.getCurrentFont(), str);
         r.setSize(textWidth, fontHeight);
-        g.setColour(Colours::lightgrey);
+        g.setColour(ColorPalette::textSecondary);
         g.drawFittedText(str, r, juce::Justification::centredLeft, 1);
     }
 }
@@ -782,8 +790,8 @@ SimpleEQAudioProcessorEditor::~SimpleEQAudioProcessorEditor()
 void SimpleEQAudioProcessorEditor::paint(juce::Graphics &g)
 {
     using namespace juce;
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (Colours::black);
+    // Fill main background with color palette
+    g.fillAll (ColorPalette::background);
     
     
      Path curve;
@@ -818,7 +826,8 @@ void SimpleEQAudioProcessorEditor::paint(juce::Graphics &g)
      curve.lineTo(center.x, 0.f);
      curve.closeSubPath();
      
-     g.setColour(Colour(97u, 18u, 167u));
+     // Use color palette for header decorative elements
+     g.setColour(ColorPalette::sliderFill);
      g.fillPath(curve);
      
      curve.applyTransform(AffineTransform().scaled(-1, 1));
@@ -826,10 +835,12 @@ void SimpleEQAudioProcessorEditor::paint(juce::Graphics &g)
      g.fillPath(curve);
      
      
-     g.setColour(Colour(255u, 154u, 1u));
+     // Use color palette for title text
+     g.setColour(ColorPalette::sliderOutline);
      g.drawFittedText(title, bounds, juce::Justification::centredTop, 1);
      
-     g.setColour(Colours::grey);
+     // Use color palette for section labels
+     g.setColour(ColorPalette::textSecondary);
      g.setFont(14);
      g.drawFittedText("LowCut", lowCutSlopeSlider.getBounds(), juce::Justification::centredBottom, 1);
      g.drawFittedText("Peak", peakQualitySlider.getBounds(), juce::Justification::centredBottom, 1);
