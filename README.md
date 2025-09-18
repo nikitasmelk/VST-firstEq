@@ -2,8 +2,8 @@
 
 A professional-grade 3-band parametric equalizer audio plugin built with the JUCE framework. This VST3/AU plugin provides precise frequency control with real-time visualization and an intuitive user interface designed with a natural earth-tone color palette.
 
-![Plugin Interface](screenshots/plugin-interface.png)
-*Main plugin interface showing the three-band EQ with frequency response analyzer*
+<!-- ![Plugin Interface](screenshots/plugin-interface.png) -->
+*Plugin interface screenshots will be added once the plugin is built and tested*
 
 ## Features
 
@@ -43,6 +43,16 @@ A professional-grade 3-band parametric equalizer audio plugin built with the JUC
 
 ## Screenshots
 
+<!-- Screenshots will be added once the plugin is built and tested -->
+
+**To be added:**
+- Main plugin interface
+- Detailed view of the control sections  
+- Real-time frequency response visualization
+
+*Build the plugin and load it in your DAW to see the actual interface with the custom earth-tone color palette and professional layout.*
+
+<!-- 
 ![Main Interface](screenshots/plugin-interface.png)
 *Main plugin interface*
 
@@ -51,6 +61,7 @@ A professional-grade 3-band parametric equalizer audio plugin built with the JUC
 
 ![Frequency Response](screenshots/frequency-response.png)
 *Real-time frequency response visualization*
+-->
 
 ## Installation
 
@@ -92,6 +103,21 @@ C:\Program Files\Common Files\VST3\VmesteBasedEQ.vst3
 - [JUCE Framework](https://juce.com/get-juce) (version 6.0 or later)
 - Xcode (macOS) or Visual Studio 2019+ (Windows)
 - CMake 3.15+ (optional, for CMake builds)
+
+#### JUCE Modules Used
+- `juce_audio_basics` - Basic audio functionality
+- `juce_audio_devices` - Audio device handling
+- `juce_audio_formats` - Audio file format support
+- `juce_audio_plugin_client` - Plugin wrapper functionality
+- `juce_audio_processors` - Audio processor base classes
+- `juce_audio_utils` - Audio utility functions
+- `juce_core` - Core JUCE functionality
+- `juce_data_structures` - Data structure utilities
+- `juce_dsp` - Digital signal processing modules
+- `juce_events` - Event handling system
+- `juce_graphics` - Graphics and drawing
+- `juce_gui_basics` - Basic GUI components
+- `juce_gui_extra` - Extended GUI components
 
 #### Build Instructions
 
@@ -210,16 +236,20 @@ VST-firstEq/
 ### Code Architecture
 
 #### Audio Processing (`PluginProcessor.cpp`)
-- **Filter Chain**: Low-cut → Peak → High-cut processing chain
-- **Parameter Management**: JUCE AudioProcessorValueTreeState for automation
-- **Real-time Analysis**: FFT-based spectrum analysis for visualization
-- **State Management**: Plugin state save/restore functionality
+- **Filter Chain**: Low-cut → Peak → High-cut processing chain using JUCE DSP modules
+- **IIR Filters**: High-quality IIR (Infinite Impulse Response) filters for each band
+- **Parameter Management**: JUCE AudioProcessorValueTreeState for automation and state management
+- **Real-time Analysis**: FFT-based spectrum analysis using FIFO buffers for visualization
+- **State Management**: Plugin state save/restore functionality with parameter versioning
+- **Mono Chain Processing**: Separate processing chains for left and right channels
 
 #### User Interface (`PluginEditor.cpp`)
-- **Custom Look and Feel**: Earth-tone color palette
-- **Rotary Sliders**: Custom rotary controls with labels
-- **Response Curve**: Real-time frequency response visualization
-- **Analyzer Display**: FFT spectrum display with dual-channel support
+- **Custom Look and Feel**: Earth-tone color palette (browns, greens, cream tones)
+- **Rotary Sliders**: Custom `RotarySliderWithLabels` components with value display
+- **Response Curve**: Real-time frequency response visualization with `ResponseCurveComponent`
+- **Analyzer Display**: FFT spectrum display with dual-channel support using `PathProducer`
+- **Color Scheme**: Professional design with colors like `darkBrown` (#605B56), `lightGreen` (#ACC18A), and `creamWhite` (#F2FBE0)
+- **Bypass Buttons**: Custom `PowerButton` components for each filter section
 
 ### Contributing
 
