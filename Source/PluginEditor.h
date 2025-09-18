@@ -11,6 +11,35 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 
+// Color Palette - Centralized color definitions for easy customization
+namespace ColorPalette
+{
+    // Primary palette from hex values: 605B56, 837A75
+    const juce::Colour primary      { 0xff605B56 };  // Main brownish-grey
+    const juce::Colour secondary    { 0xff837A75 };  // Lighter brown-grey
+    
+    // Derived and accent colors
+    const juce::Colour accent       { 0xff92857f };  // Slightly lighter for highlights
+    const juce::Colour highlight   { secondary.brighter(0.3f) };  // For active states
+    
+    // Standard interface colors
+    const juce::Colour background  { juce::Colours::black };
+    const juce::Colour text        { juce::Colours::white };
+    const juce::Colour textSecondary { juce::Colours::lightgrey };
+    const juce::Colour textDisabled { juce::Colours::darkgrey };
+    const juce::Colour border      { secondary };
+    const juce::Colour gridLines   { juce::Colours::dimgrey };
+    
+    // Specific component colors
+    const juce::Colour sliderFill  { primary };
+    const juce::Colour sliderOutline { secondary };
+    const juce::Colour buttonActive { accent };
+    const juce::Colour buttonInactive { juce::Colours::dimgrey };
+    const juce::Colour fftLeft     { secondary.withAlpha(0.8f) };
+    const juce::Colour fftRight    { primary.withAlpha(0.8f) };
+    const juce::Colour responseCurve { text };
+}
+
 enum FFTOrder
 {
     order2048 = 11,
