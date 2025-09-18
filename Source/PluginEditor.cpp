@@ -25,7 +25,7 @@ void LookAndFeel::drawRotarySlider(juce::Graphics & g, int x, int y, int width, 
     auto enabled = slider.isEnabled();
     
     // Use color palette for slider fill and outline
-    g.setColour(enabled ? ColorPalette::sliderFill : ColorPalette::buttonInactive);
+    g.setColour(enabled ? ColorPalette::sliderFill : ColorPalette::sliderFill);
     g.fillEllipse(bounds);
     
     g.setColour(enabled ? ColorPalette::sliderOutline : ColorPalette::textSecondary);
@@ -65,7 +65,7 @@ void LookAndFeel::drawRotarySlider(juce::Graphics & g, int x, int y, int width, 
         r.setSize(strWidth + 4.0f, rswl->getTextHeight() + 2.0f);
         r.setCentre(bounds.getCentre());
         
-        g.setColour(enabled ? ColorPalette::background : ColorPalette::buttonInactive);
+        g.setColour(enabled ? ColorPalette::background : ColorPalette::sliderFill);
         g.fillRect(r);
         
         g.setColour(enabled ? ColorPalette::textPrimary : ColorPalette::textSecondary);
@@ -86,10 +86,11 @@ void LookAndFeel::drawToggleButton(juce::Graphics &g,
         Path powerButton;
         
         auto bounds = toggleButton.getLocalBounds();
+        bounds.setY(bounds.getY() - 1);
         
-        // SEE THE BOUNDS OF TOGGLE BUTTONS
-    //    g.setColour(Colours::red);
-    //    g.drawRect(bounds);
+//         SEE THE BOUNDS OF TOGGLE BUTTONS
+//        g.setColour(Colours::red);
+//        g.drawRect(bounds);
         
         auto size = jmin(bounds.getWidth(), bounds.getHeight() - 4);
         auto r = bounds.withSizeKeepingCentre(size, size).toFloat();
@@ -474,7 +475,7 @@ void ResponseCurveComponent::drawTextLabels(juce::Graphics &g)
     using namespace juce;
 
     // Use color palette for text labels
-    g.setColour(ColorPalette::textSecondary);
+    g.setColour(ColorPalette::textThird);
     const int fontHeight = 10;
     g.setFont(fontHeight);
     
@@ -536,7 +537,7 @@ void ResponseCurveComponent::drawTextLabels(juce::Graphics &g)
         r.setX(getWidth() - textWidth);
         r.setCentre(r.getCentreX(), y);
         
-        g.setColour(gDb == 0.f ? ColorPalette::highlightActive : ColorPalette::textSecondary);
+        g.setColour(gDb == 0.f ? ColorPalette::highlightActive : ColorPalette::textThird);
         
         g.drawFittedText(str, r, juce::Justification::centredLeft, 1);
         
@@ -546,7 +547,7 @@ void ResponseCurveComponent::drawTextLabels(juce::Graphics &g)
         r.setX(1);
         textWidth = getTextWidth(g.getCurrentFont(), str);
         r.setSize(textWidth, fontHeight);
-        g.setColour(ColorPalette::textSecondary);
+        g.setColour(ColorPalette::textThird);
         g.drawFittedText(str, r, juce::Justification::centredLeft, 1);
     }
 }
@@ -807,7 +808,7 @@ void SimpleEQAudioProcessorEditor::paint(juce::Graphics &g)
     
     g.setFont(juce::Font{ opts });
 
-    juce::String title { "VMESTE Epique EQ" };
+    juce::String title { "VMESTE Matcha EQ" };
     auto titleWidth = getTextWidth(g.getCurrentFont(), title);
      
      curve.startNewSubPath(center.x, 32);
@@ -840,7 +841,7 @@ void SimpleEQAudioProcessorEditor::paint(juce::Graphics &g)
      g.drawFittedText(title, bounds, juce::Justification::centredTop, 1);
      
      // Use color palette for section labels
-     g.setColour(ColorPalette::textSecondary);
+     g.setColour(ColorPalette::highlightActive);
      g.setFont(14);
      g.drawFittedText("LowCut", lowCutSlopeSlider.getBounds(), juce::Justification::centredBottom, 1);
      g.drawFittedText("Peak", peakQualitySlider.getBounds(), juce::Justification::centredBottom, 1);
@@ -849,7 +850,8 @@ void SimpleEQAudioProcessorEditor::paint(juce::Graphics &g)
      auto buildDate = Time::getCompilationDate().toString(true, false);
      auto buildTime = Time::getCompilationDate().toString(false, true);
      g.setFont(12);
-     g.drawFittedText("Build: " + buildDate + "\n" + buildTime, highCutSlopeSlider.getBounds().withY(6), Justification::topRight, 2);
+    g.setColour(ColorPalette::textSecondary);
+     g.drawFittedText("Build: " + buildDate + "\n" + "By: Ste", highCutSlopeSlider.getBounds().withY(6), Justification::topRight, 2);
     
 }
 

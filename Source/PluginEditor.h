@@ -16,12 +16,18 @@
 // ============================================================================
 namespace ColorPalette
 {
-    // Primary color palette based on natural earth tones
+//    // Primary color palette based on natural earth tones
     const juce::Colour darkBrown    = juce::Colour(0x60, 0x5B, 0x56);  // 605B56 - Main background and dark elements
     const juce::Colour mediumBrown  = juce::Colour(0x83, 0x7A, 0x75);  // 837A75 - Secondary elements and borders
     const juce::Colour lightGreen   = juce::Colour(0xAC, 0xC1, 0x8A);  // ACC18A - Interactive elements and highlights
     const juce::Colour paleGreen    = juce::Colour(0xDA, 0xFE, 0xB7);  // DAFEB7 - Active states and accents
     const juce::Colour creamWhite   = juce::Colour(0xF2, 0xFB, 0xE0);  // F2FBE0 - Text and light elements
+
+//    const juce::Colour darkBrown    = juce::Colour(0x12, 0x03, 0x03);  // 605B56 - Main background and dark elements
+//    const juce::Colour mediumBrown  = juce::Colour(0x2D, 0x08, 0x0A);  // 837A75 - Secondary elements and borders
+    const juce::Colour burnt   = juce::Colour(0x8b, 0x94, 0x7c);  // ACC18A - Interactive elements and highlights
+//    const juce::Colour paleGreen    = juce::Colour(0xF5, 0x85, 0x3F);  // DAFEB7 - Active states and accents
+//    const juce::Colour creamWhite   = juce::Colour(0xFF, 0xCD, 0xBC);  // F2FBE0 - Text and light elements
     
     // Derived colors for specific UI elements
     const juce::Colour sliderFill   = darkBrown;        // Main slider body color
@@ -36,6 +42,7 @@ namespace ColorPalette
     const juce::Colour curveAnalyzer1 = lightGreen;     // Left channel analyzer
     const juce::Colour curveAnalyzer2 = paleGreen;      // Right channel analyzer
     const juce::Colour border = mediumBrown;            // General borders and frames
+    const juce::Colour textThird = burnt;
 }
 
 enum FFTOrder
